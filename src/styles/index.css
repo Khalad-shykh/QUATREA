@@ -1,0 +1,270 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   QUATRÉA — design tokens
+   ------------------------------------------------------------------ */
+@theme {
+  /* Brand palette */
+  --color-midnight: #021024;
+  --color-navy: #052659;
+  --color-steel: #5483b3;
+  --color-mist: #7da0ca;
+  --color-ice: #c1e8ff;
+  --color-pearl: #e9f0f7;
+  --color-abyss: #010a18;
+
+  /* Seasonal accents — used sparingly (dots, hairlines, glows) */
+  --color-spring: #e8c4d2;
+  --color-summer: #e9c77b;
+  --color-autumn: #d38c4c;
+  --color-winter: #cfe9ff;
+
+  /* Typography */
+  --font-serif: "Libre Baskerville", "Baskerville", "Georgia", serif;
+
+  --text-label: 0.6875rem;
+  --text-label--letter-spacing: 0.32em;
+  --text-label--line-height: 1.6;
+
+  --tracking-luxe: 0.32em;
+  --tracking-wordmark: 0.42em;
+
+  /* Motion */
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-silk: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --breakpoint-3xl: 112rem;
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scrollbar-color: #5483b3 #021024;
+    scrollbar-width: thin;
+  }
+
+  body {
+    background-color: var(--color-midnight);
+    color: var(--color-pearl);
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Film grain — gives flat dark surfaces a printed, photographic depth. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.055;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: var(--color-ice);
+    color: var(--color-midnight);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-ice);
+    outline-offset: 4px;
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 400;
+    text-wrap: balance;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Components & utilities
+   ------------------------------------------------------------------ */
+@layer components {
+  /* Small uppercase eyebrow / season label */
+  .label {
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-luxe);
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  /* Display headings */
+  .display-xl {
+    font-size: clamp(2.75rem, 6.4vw, 6.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+  .display-lg {
+    font-size: clamp(2.35rem, 4.6vw, 4.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+  .display-md {
+    font-size: clamp(1.9rem, 3.1vw, 3.25rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+  }
+
+  .body-copy {
+    color: color-mix(in oklab, var(--color-pearl) 74%, transparent);
+    font-size: 0.9375rem;
+    line-height: 1.9;
+  }
+
+  /* Line-by-line reveal: wrap each line in .line-mask > .line-inner */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+  }
+  .line-inner {
+    display: block;
+    will-change: transform;
+  }
+
+  /* Thin animated underline for interactive text */
+  .link-underline {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.35rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.6s var(--ease-luxe);
+  }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after,
+  .link-underline[data-active="true"]::after,
+  .group:hover .link-underline::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Hairline borders in the brand light accent */
+  .hairline {
+    border-color: color-mix(in oklab, var(--color-ice) 14%, transparent);
+  }
+
+  /* Outlined display type used as atmospheric watermark */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in oklab, var(--color-ice) 22%, transparent);
+  }
+
+  /* Form fields */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-ice) 22%, transparent);
+    padding: 0.85rem 0;
+    color: var(--color-pearl);
+    font-size: 1rem;
+    transition: border-color 0.4s var(--ease-luxe);
+    border-radius: 0;
+  }
+  .field::placeholder {
+    color: color-mix(in oklab, var(--color-pearl) 32%, transparent);
+  }
+  .field:hover {
+    border-bottom-color: color-mix(in oklab, var(--color-ice) 45%, transparent);
+  }
+  .field:focus {
+    outline: none;
+    border-bottom-color: var(--color-ice);
+  }
+  .field[aria-invalid="true"] {
+    border-bottom-color: #e7a3a3;
+  }
+}
+
+@layer utilities {
+  .container-luxe {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 92rem;
+    padding-inline: clamp(1.25rem, 4.5vw, 4.5rem);
+  }
+
+  .pb-safe {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+    mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+}
+
+/* Keyframes used by CSS-only micro-motion */
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(220%);
+  }
+}
+
+@keyframes slow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-scroll-cue {
+  animation: scroll-cue 2.4s var(--ease-silk) infinite;
+}
+.animate-slow-pulse {
+  animation: slow-pulse 5s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------
+   Reduced motion
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
